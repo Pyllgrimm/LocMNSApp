@@ -1,0 +1,50 @@
+﻿@model List<Materiel>
+@{
+}
+
+<h2 class="text-center mb-5">Liste du Matériel</h2>
+
+<div class="row mb-5">
+    <div class="col">
+        <a class="btn btn-primary" asp-controller="Materiel" asp-action="Create">Nouveau Matériel</a>
+    </div>
+    <div class="col">
+
+    </div>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th>ID</th>
+            <th>Appellation</th>
+            <th>Marque</th>
+            <th>Categorie</th>
+            <th>Numero de série</th>
+            <th>Etat</th>
+            <th>Prix / jour</th>
+            <th>Mise en service</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var materiel in Model)
+        {
+            <tr class="text-center">
+                <td>@materiel.Id</td>
+                <td>@materiel.NomMateriel</td>
+                <td>@materiel.Marque</td>
+                <td>@materiel.Categorie</td>
+                <td>@materiel.NumeroSerie</td>
+                <td>@materiel.Etat</td>
+                <td>@(materiel.PrixParJour)€</td>
+                <td>@materiel.DateCreation.ToString("dd/MM/yyyy")</td>
+                <td style="white-space:nowrap">
+                    <a class="btn btn-primary btn-sm" asp-controller="Materiel" asp-action="Edit" asp-route-id="@materiel.Id">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-controller="Materiel" asp-action="Delete" asp-route-id="@materiel.Id" onclick="return confirm('Etes-vous sûr ?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
