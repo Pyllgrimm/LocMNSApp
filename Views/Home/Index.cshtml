@@ -1,8 +1,56 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@{
     ViewData["Title"] = "Home Page";
+
+    
+
+    
 }
 
-<div class="text-center">
-    <h1 class="display-4">Acceuil</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+@if (!User.IsInRole("Utilisateur"))
+{
+    <div class=" row mt-5">
+        <div class="offset-sm-2 col-sm-4 d-grid mb-3 mt-5">
+            <a class="mon-btn mon-btn-primary" asp-controller="Location" asp-action="Index" role="button">Demande de location en attente</a>
+        </div>
+        <div class="col-sm-4 d-grid mb-3 mt-5">
+            <a class="mon-btn mon-btn-primary" asp-controller="Materiel" asp-action="Index" role="button">Voir la liste du materiel</a>
+        </div>
+        <div class="offset-sm-2 col-sm-4 d-grid mb-3">
+            <a class="mon-btn mon-btn-primary" asp-controller="Utilisateur" asp-action="Index" role="button">Voir la liste des utilisateurs</a>
+        </div>
+        <div class="col-sm-4 d-grid mb-3">
+            <a class="mon-btn mon-btn-primary" asp-controller="Location" asp-action="UserLocations" role="button">Voir mes locations</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class=" row mt-5">
+        <div class="offset-sm-2 col-sm-4 d-grid mb-3 mt-5">
+            <a class="mon-btn mon-btn-primary" asp-controller="Location" asp-action="UserLocations" role="button">Voir mes locations</a>
+        </div>
+        <div class="col-sm-4 d-grid mb-3 mt-5">
+            <a class="mon-btn mon-btn-primary" asp-controller="Materiel" asp-action="Index" role="button">Voir la liste du materiel</a>
+        </div>
+        <div class="offset-sm-2 col-sm-4 d-grid mb-3">
+            <a class="mon-btn mon-btn-primary" asp-controller="Utilisateur" asp-action="MonCompte" role="button">Mon compte</a>
+        </div>
+        <div class="col-sm-4 d-grid mb-3">
+            <a class="mon-btn mon-btn-primary" asp-controller="Materiel" asp-action="Index" role="button">Retour</a>
+        </div>
+    </div>
+}
+
+@section Scripts{
+
+    <script>
+        @if (TempData["success"] != null)
+        {
+            @:toastr.success("@TempData["success"]")
+        }
+    </script>
+}                               
+
+

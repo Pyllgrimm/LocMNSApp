@@ -1,46 +1,82 @@
 ﻿@using LocMNSApp.ViewModels;
 @model RegisterViewModel
 
-@{
-    ViewData["Title"] = "Register";
-}
 
-<div class="row d-flex align-items-center justify-content-center">
-    <div class="col-md-4 card p-3">
-        <h2 class="text-center text-info">Register</h2>
+
+<div class="row d-flex align-items-center justify-content-center mt-5">
+    <div class="col-md-6 card p-3 background-Formulaire">
+        <h2 class="text-center text-white">S'enregistrer</h2>
         <form asp-action="Register" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class=" mb-1">
-                <label asp-for="Nom"></label>
-                <input asp-for="Nom" class=" form-control " />
-                <span asp-validation-for="Nom" class="text-danger"></span>
-            </div>
-            <div class=" mb-1">
-                <label asp-for="Prenom"></label>
-                <input asp-for="Prenom" class=" form-control " />
-                <span asp-validation-for="Prenom" class="text-danger"></span>
-            </div>
-            <div class=" mb-1">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class=" form-control " />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="mb-1">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="mb-1">
-                <label asp-for="ComfirmPassword"></label>
-                <input asp-for="ComfirmPassword" class="form-control" />
-                <span asp-validation-for="ComfirmPassword" class="text-danger"></span>
+            <div class="row">
+                <div class="col-6">
+                    <div class=" mb-1">
+                        <label asp-for="Nom"></label>
+                        <input asp-for="Nom" class=" form-control " autocomplete="on" />
+@*                         <span asp-validation-for="Nom" class="text-dark"></span>
+ *@                    </div>
+                    <div class=" mb-1">
+                        <label asp-for="Prenom"></label>
+                        <input asp-for="Prenom" class=" form-control " autocomplete="on" />
+@*                         <span asp-validation-for="Prenom" class="text-dark"></span>
+ *@                    </div>
+                    <div class=" mb-1">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class=" form-control " autocomplete="on" />
+@*                         <span asp-validation-for="Email" class="text-dark"></span>
+ *@                    </div>
+                    <div class="mb-1">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="form-control" />
+@*                         <span asp-validation-for="Password" class="text-dark"></span>
+ *@                    </div>
+                    <div class="mb-1">
+                        <label asp-for="ComfirmPassword"></label>
+                        <input asp-for="ComfirmPassword" class="form-control" />
+@*                         <span asp-validation-for="ComfirmPassword" class="text-dark"></span>
+ *@                    </div>
+                </div>
+                <div class="col-6">
+                    <div class=" mb-1">
+                        <label asp-for="Telephone"></label>
+                        <input asp-for="Telephone" class=" form-control " autocomplete="on" />
+@*                         <span asp-validation-for="Telephone" class="text-dark "></span>
+ *@                    </div>
+                    <div class=" mb-1">
+                        <label asp-for="Adresse"></label>
+                        <input asp-for="Adresse" class=" form-control " autocomplete="on" />
+@*                         <span asp-validation-for="Adresse" class="text-dark"></span>
+ *@                    </div>
+                    <div class=" mb-1">
+                        <label asp-for="CodePostal"></label>
+                        <input asp-for="CodePostal" class=" form-control " autocomplete="on" />
+@*                         <span asp-validation-for="CodePostal" class="text-dark"></span>
+ *@                    </div>
+                    <div class=" mb-1">
+                        <label asp-for="Ville"></label>
+                        <input asp-for="Ville" class=" form-control " autocomplete="on" />
+@*                         <span asp-validation-for="Ville" class="text-dark"></span>
+ *@                    </div>
+                    <div class=" mb-1">
+                        <label class="col-sm-5 ">Promotion</label>
+                        <div class="col-sm-8">
+                            <select class="form-select" asp-for="Promotion">
+                                <option value="Autre">Autre</option>
+                                <option value="CDA C#">CDA C#</option>
+                                <option value="CDA JAVA">CDA JAVA</option>
+                                <option value="TSSR">TSSR</option>
+                                <option value="M2I">M2I</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-8 mt-1">
-                    <a asp-action="Login" class="text-decoration-none float-start mt-2">Déjà inscrit ?</a>
+                    <a asp-action="Login" class="text-decoration-none text-white float-start mt-2">Déjà inscrit ?</a>
                 </div>
                 <div class="col-4 mt-2">
-                    <input type="submit" value="Valider" class="btn btn-primary btn-sm float-end" />
+                    <input type="submit" id="submit" value="Valider" class="btn btn-primary btn-sm float-end" />
                 </div>
             </div>
         </form>
@@ -51,4 +87,69 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            $('Nom').focus();
+        })
+        $("#submit").click(function () {
+            
+
+            var Nom = $("#Nom").val();
+            var Prenom = $("#Prenom").val();
+            var Password = $("#Password").val();
+            var ComfirmPassword = $("#ComfirmPassword").val();
+            var Telephone = $("#Telephone").val();
+            var Adresse = $("#Adresse").val();
+            var CodePostal = $("#CodePostal").val();
+            var Ville = $("#Ville").val();
+
+
+
+
+            if (Nom == null || Nom == ""){
+                toastr.error("Le nom est invalide");
+                return;
+            }
+            if (Prenom == null || Prenom == "") {
+                toastr.error("Le prenom est invalide");
+                return;
+
+            }
+            if (Email == null || Email == "") {
+                toastr.error("L' email est invalide");
+                return;
+
+            }
+            if (Password == null || Password == "") {
+                toastr.error("Le mot de passe est invalide");
+                return;
+
+            }
+            if (ComfirmPassword != Password) {
+                toastr.error("Ne correspond pas");
+                return;
+
+            }
+            if (Telephone == null || Telephone == "") {
+                toastr.error("Le téléphone est invalide");
+                return;
+
+            }
+            if (Adresse == null || Adresse == "") {
+                toastr.error("L' adresse est invalide");
+                return;
+
+            }
+            if (CodePostal == null || CodePostal == "") {
+                toastr.error("Le code postale est invalide");
+                return;
+
+            }
+            if (Ville == null || Ville == "") {
+                toastr.error("La ville est invalide");
+                return;
+
+            }
+        })
+    </script>
 }

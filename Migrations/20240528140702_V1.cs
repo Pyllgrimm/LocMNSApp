@@ -33,8 +33,12 @@ namespace LocMNSApp.Migrations
                     Nom = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Prenom = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Adresse = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CodePostal = table.Column<int>(type: "int", nullable: false),
+                    Ville = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Promotion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateEnregistrement = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ArchivateAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -67,11 +71,26 @@ namespace LocMNSApp.Migrations
                     NumeroSerie = table.Column<int>(type: "int", nullable: false),
                     Etat = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PrixParJour = table.Column<decimal>(type: "decimal(16,2)", precision: 16, scale: 2, nullable: false),
-                    DateCreation = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Disponibilitee = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateCreation = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ArchivateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Materiels", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StatueLocations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StatueLocations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,6 +199,44 @@ namespace LocMNSApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Locations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateDebut = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Duree = table.Column<int>(type: "int", nullable: true),
+                    DateDemande = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateRetourPrevue = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateRetourReelle = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MontantTotal = table.Column<decimal>(type: "decimal(16,0)", precision: 16, scale: 0, nullable: false),
+                    ArchivateAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StatusId = table.Column<int>(type: "int", nullable: true),
+                    DemandeurId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MaterielDemandeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Locations_AspNetUsers_DemandeurId",
+                        column: x => x.DemandeurId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Locations_Materiels_MaterielDemandeId",
+                        column: x => x.MaterielDemandeId,
+                        principalTable: "Materiels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Locations_StatueLocations_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "StatueLocations",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -218,6 +275,21 @@ namespace LocMNSApp.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_DemandeurId",
+                table: "Locations",
+                column: "DemandeurId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_MaterielDemandeId",
+                table: "Locations",
+                column: "MaterielDemandeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_StatusId",
+                table: "Locations",
+                column: "StatusId");
         }
 
         /// <inheritdoc />
@@ -239,13 +311,19 @@ namespace LocMNSApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Materiels");
+                name: "Locations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Materiels");
+
+            migrationBuilder.DropTable(
+                name: "StatueLocations");
         }
     }
 }

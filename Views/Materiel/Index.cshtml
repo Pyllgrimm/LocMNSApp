@@ -1,50 +1,151 @@
 ﻿@model List<Materiel>
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<Utilisateur> _signInManager
 @{
 }
 
-<h2 class="text-center mb-5">Liste du Matériel</h2>
+<h2 class="text-center mb-2 text-white mt-5">Liste du Matériel</h2>
 
-<div class="row mb-5">
-    <div class="col">
-        <a class="btn btn-primary" asp-controller="Materiel" asp-action="Create">Nouveau Matériel</a>
+
+
+@if (User.IsInRole("Admin")|| User.IsInRole("Collaborateur"))
+{
+    <div class="row mb-3 " >
+        <div class="col">
+            <a class="btn btn-primary" asp-controller="Materiel" asp-action="Create">Nouveau Matériel</a>
+        </div>
+        <div class="col">
+        </div>
     </div>
-    <div class="col">
-
-    </div>
-</div>
-
-
-<table class="table">
-    <thead>
-        <tr class="text-center">
-            <th>ID</th>
-            <th>Appellation</th>
-            <th>Marque</th>
-            <th>Categorie</th>
-            <th>Numero de série</th>
-            <th>Etat</th>
-            <th>Prix / jour</th>
-            <th>Mise en service</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var materiel in Model)
-        {
+    <table class="table bg-white rounded ">
+        <thead>
             <tr class="text-center">
-                <td>@materiel.Id</td>
-                <td>@materiel.NomMateriel</td>
-                <td>@materiel.Marque</td>
-                <td>@materiel.Categorie</td>
-                <td>@materiel.NumeroSerie</td>
-                <td>@materiel.Etat</td>
-                <td>@(materiel.PrixParJour)€</td>
-                <td>@materiel.DateCreation.ToString("dd/MM/yyyy")</td>
-                <td style="white-space:nowrap">
-                    <a class="btn btn-primary btn-sm" asp-controller="Materiel" asp-action="Edit" asp-route-id="@materiel.Id">Edit</a>
-                    <a class="btn btn-danger btn-sm" asp-controller="Materiel" asp-action="Delete" asp-route-id="@materiel.Id" onclick="return confirm('Etes-vous sûr ?')">Delete</a>
-                </td>
+                <th>ID</th>
+                <th>Appellation</th>
+                <th>Marque</th>
+                <th>Categorie</th>
+                <th>Numero de série</th>
+                <th>Etat</th>
+                <th>Prix / jour</th>
+                <th>Mise en service</th>
+                <th>Action</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var materiel in Model)
+            {
+                if (materiel.Disponibilitee != "Disponible")
+                {
+
+                    <tr class="text-center bg-dark bg-opacity-10">
+                        <td>@materiel.Id</td>
+                        <td>@materiel.NomMateriel</td>
+                        <td>@materiel.Marque</td>
+                        <td>@materiel.Categorie</td>
+                        <td>@materiel.NumeroSerie</td>
+                        <td>@materiel.Etat</td>
+                        <td>@(materiel.PrixParJour)€</td>
+                        <td>@materiel.DateCreation.ToString("dd/MM/yyyy")</td>
+                        <td style="white-space:nowrap">
+                            <a class="btn btn-primary btn-sm" asp-controller="Materiel" asp-action="Edit" asp-route-id="@materiel.Id"><i class="fa fa-edit"></i></a>
+                            <a class="btn btn-danger btn-sm" asp-controller="Materiel" asp-action="Delete" asp-route-id="@materiel.Id" onclick="return confirm('Etes-vous sûr ?')"><i class="fa fa-archive"></i></a>
+                        </td>
+                    </tr>
+
+                }
+                else
+                {
+
+                    <tr class="text-center ">
+
+                        <td>@materiel.Id</td>
+                        <td><a class="text-decoration-none" asp-area="" asp-action="Create" asp-route-id="@materiel.Id" asp-controller="Location">@materiel.NomMateriel</a></td>
+                        <td>@materiel.Marque</td>
+                        <td>@materiel.Categorie</td>
+                        <td>@materiel.NumeroSerie</td>
+                        <td>@materiel.Etat</td>
+                        <td>@(materiel.PrixParJour)€</td>
+                        <td>@materiel.DateCreation.ToString("dd/MM/yyyy")</td>
+                        <td style="white-space:nowrap">
+                            <a class="btn btn-primary btn-sm" asp-controller="Materiel" asp-action="Edit" asp-route-id="@materiel.Id"><i class="fa fa-edit"></i></a>
+                            <a class="btn btn-danger btn-sm" asp-controller="Materiel" asp-action="Delete" asp-route-id="@materiel.Id" onclick="return confirm('Etes-vous sûr ?')"><i class="fa fa-archive"></i></a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="row mb-3">
+        <div class="col">
+            
+        </div>
+        <div class="col">
+        </div>
+    </div>
+    <table class="table bg-white rounded ">
+        <thead>
+            <tr class="text-center">
+                
+                <th>Appellation</th>
+                <th>Marque</th>
+                <th>Categorie</th>
+                <th>Numero de série</th>
+                <th>Etat</th>
+                <th>Prix / jour</th>
+                <th>Mise en service</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var materiel in Model)
+            {
+                if (materiel.Disponibilitee != "Disponible")
+                {
+
+                    <tr class="text-center bg-dark bg-opacity-10">
+                        
+                        <td>@materiel.NomMateriel</td>
+                        <td>@materiel.Marque</td>
+                        <td>@materiel.Categorie</td>
+                        <td>@materiel.NumeroSerie</td>
+                        <td>@materiel.Etat</td>
+                        <td>@(materiel.PrixParJour)€</td>
+                        <td>@materiel.DateCreation.ToString("dd/MM/yyyy")</td>
+                        
+                    </tr>
+
+                }
+                else
+                {
+
+                    <tr class="text-center ">
+
+
+                        <td><a class="text-decoration-none" asp-area="" asp-action="Create" asp-route-id="@materiel.Id" asp-controller="Location">@materiel.NomMateriel</a></td>
+                        <td>@materiel.Marque</td>
+                        <td>@materiel.Categorie</td>
+                        <td>@materiel.NumeroSerie</td>
+                        <td>@materiel.Etat</td>
+                        <td>@(materiel.PrixParJour)€</td>
+                        <td>@materiel.DateCreation.ToString("dd/MM/yyyy")</td>
+                        
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+}
+
+@section Scripts{
+
+    <script>
+        @if (TempData["success"] != null)
+        {
+            @:toastr.success("@TempData["success"]")
         }
-    </tbody>
-</table>
+    </script>
+}

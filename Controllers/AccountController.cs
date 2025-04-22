@@ -1,8 +1,13 @@
-﻿using LocMNSApp.Models;
+﻿using LocMNSApp.DTOs;
+using LocMNSApp.Models;
 using LocMNSApp.ViewModels;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocMNSApp.Controllers
 {
@@ -10,19 +15,26 @@ namespace LocMNSApp.Controllers
     {
         private readonly SignInManager<Utilisateur> _signInManager;
         private readonly UserManager<Utilisateur> _userManager;
+        
 
         public AccountController(SignInManager<Utilisateur> signInManager, UserManager<Utilisateur> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-
+            
         }
         public IActionResult Login()
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+
+            if (claimUser.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
         [HttpPost]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
@@ -31,6 +43,22 @@ namespace LocMNSApp.Controllers
 
                 if (result.Succeeded)
                 {
+                    List<Claim> claims = new List<Claim>() 
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, model.Username),
+                        new Claim("OtherProperties", "Example Role")
+                    };
+
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    AuthenticationProperties properties = new AuthenticationProperties()
+                    {
+                        AllowRefresh = true,
+                        IsPersistent = model.SeSouvenirDeMoi
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), properties);
+
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Login invalide");
@@ -45,6 +73,7 @@ namespace LocMNSApp.Controllers
         }
 
         [HttpPost]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -55,22 +84,28 @@ namespace LocMNSApp.Controllers
                     Prenom = model.Prenom,
                     UserName = model.Email,
                     Email = model.Email,
-                    DateEnregistrement = DateTime.Now
+                    Adresse = model.Adresse,
+                    CodePostal = model.CodePostal,
+                    Ville = model.Ville,
+                    Promotion = model.Promotion,
+                    PhoneNumber = model.Telephone,
+                    DateEnregistrement = DateTime.Now,
+                    Locations = new List<Location>()
                 };
-
-
-
-                if (utilisateur.Email.Equals($"{utilisateur.Prenom}.{utilisateur.Nom}@metznumericschool.fr"))
+            
+                if (utilisateur.Email.Equals("admin.admin@gestionlocmns.fr"))
                 {
                     var result = await _userManager.CreateAsync(utilisateur, model.Password!);
 
+                    
                     await _userManager.AddToRoleAsync(utilisateur, "Admin");
 
+
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(utilisateur, false);
 
-                        return RedirectToAction("Login", "Account");
+                        return RedirectToAction("Index", "Home");
                     }
 
                     foreach (var error in result.Errors)
@@ -78,41 +113,27 @@ namespace LocMNSApp.Controllers
                         ModelState.AddModelError("", error.Description);
                     }
                 }
-                else if (utilisateur.Email.Equals($"{utilisateur.Prenom}.{utilisateur.Nom}@formateursifa.fr"))
+                else if (utilisateur.Email.Equals($"{utilisateur.Prenom.ToLower()}.{utilisateur.Nom.ToLower()}@formateursifa.fr") ||
+                         utilisateur.Email.Equals($"{utilisateur.Prenom.ToLower()}.{utilisateur.Nom.ToLower()}@metznumericschool.fr") ||
+                         utilisateur.Email.Equals($"{utilisateur.Prenom.ToLower()}.{utilisateur.Nom.ToLower()}@stagiairesmns.fr") ||
+                         utilisateur.Email.Equals($"{utilisateur.Prenom.ToLower()}.{utilisateur.Nom.ToLower()}@stagiairesifa.fr"))
                 {
 
                     var result = await _userManager.CreateAsync(utilisateur, model.Password!);
 
-                    await _userManager.AddToRoleAsync(utilisateur, "Formateur");
+                    await _userManager.AddToRoleAsync(utilisateur, "Utilisateur");
 
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(utilisateur, false);
+                        TempData["success"] = "Compte créé avec succès";
 
-                        return RedirectToAction("Login", "Account");
+                        return RedirectToAction("Index", "Home");
                     }
 
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError("", error.Description);
-                    }
-                }
-                else if (utilisateur.Email.Equals($"{utilisateur.Prenom}.{utilisateur.Nom}@stagiairesmns.fr") || utilisateur.Email.Equals($"{utilisateur.Prenom}.{utilisateur.Nom}@stagiairesifa.fr"))
-                {
-                    var result = await _userManager.CreateAsync(utilisateur, model.Password!);
-                    await _userManager.AddToRoleAsync(utilisateur, "Stagiaire");
-
-                    if (result.Succeeded)
-                    {
-                        await _signInManager.SignInAsync(utilisateur, false);
-
-                        return RedirectToAction("Login", "Account");
-                    }
-
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-
                     }
                 }
                 else
@@ -131,5 +152,9 @@ namespace LocMNSApp.Controllers
 
             return RedirectToAction("Login", "Account");
         }
+
+        
+
+
     }
 }

@@ -20,6 +20,9 @@ namespace LocMNSApp.DTOs
         [Required, MaxLength(100)]
         public string Etat { get; set; } = "";
 
+        [Required, MaxLength(100)]
+        public string Disponibilitee { get; set; }
+
         [Required]
         [Precision(16, 2)]
         public decimal PrixParJour { get; set; }

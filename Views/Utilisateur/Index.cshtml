@@ -1,0 +1,44 @@
+﻿@model List<UtilisateurViewModel>
+@{
+}
+
+<h2 class="text-center mb-2 text-white mt-5">Liste des Utilisateurs</h2>
+
+<table class="mt-5 table bg-white rounded border-">
+    <thead>
+        <tr class="text-center">
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Adresse</th>
+            <th>Code Postale</th>
+            <th>Ville</th>
+            <th>Téléphone</th>
+            <th>Promotion</th>
+            <th>Date d'enregistrement</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var utilisateur in Model)
+        {
+            <tr class="text-center ">
+                <td>@utilisateur.Id</td>
+                <td>@utilisateur.Nom</td>
+                <td>@utilisateur.Prenom</td>
+                <td>@utilisateur.Adresse</td>
+                <td>@utilisateur.CodePostal</td>
+                <td>@utilisateur.Ville</td>
+                <td>@utilisateur.PhoneNumber</td>
+                <td>@utilisateur.Promotion</td>
+                <td>@utilisateur.DateEnregistrement.ToString("dd/MM/yyyy")</td>
+                <td>@utilisateur.RoleName</td>
+                    <td style="white-space:nowrap">
+                    <a class="btn btn-primary btn-sm" asp-controller="Utilisateur" asp-action="Edit" asp-route-id="@utilisateur.Id"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-danger btn-sm" asp-controller="Utilisateur" asp-action="Delete" asp-route-id="@utilisateur.Id" onclick="return confirm('Etes-vous sûr ?')"><i class="fa fa-archive"></i></a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

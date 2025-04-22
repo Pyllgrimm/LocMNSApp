@@ -1,0 +1,97 @@
+﻿@model LocMNSApp.DTOs.UtilisateurDto   
+@{
+}
+
+<div class="row ">
+    <div class="col-md-8 mx-auto mt-5 mb-5 background-Formulaire rounded ps-5 pe-5">
+        <h2 class="text-center mt-3 mb-5 text-white">Edit Utilisateur</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Id</label>
+                <div class="col-sm-8">
+                    <input class="form-control-plaintext text-white" readonly value="@ViewData["UtilisateurId"]" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Nom</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Nom" />
+                    <span asp-validation-for="Nom" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Prénom</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Prenom" />
+                    <span asp-validation-for="Prenom" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Adresse</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Adresse" />
+                    <span asp-validation-for="Adresse" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Code Postal</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="CodePostal" />
+                    <span asp-validation-for="CodePostal" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Ville</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Ville" />
+                    <span asp-validation-for="Ville" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Téléphone</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="PhoneNumber" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Promotion</label>
+                <div class="col-sm-8">
+                    <select class="form-select" asp-for="Promotion">
+                        <option value="Autre">Autre</option>
+                        <option value="CDA C#">CDA C#</option>
+                        <option value="CDA JAVA">CDA JAVA</option>
+                        <option value="TSSR">TSSR</option>
+                        <option value="M2I">M2I</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Enregistré le</label>
+                <div class="col-sm-8">
+                    <input class="form-control-plaintext text-white" readonly value="@ViewData["DateEnregistrement"]" />
+                </div>
+            </div>
+            <div class="row mb-4">
+                <label class="col-sm-4 col-form-label text-white" >Role</label>
+                <div class="col-sm-8">
+                    <select class="form-select" asp-for="RoleName">
+                        <option value="Autre">Autre</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Collaborateur">Collaborateur</option>
+                        <option value="Utilisateur">Utilisateur</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="offset-sm-4 col-sm-4 d-grid">
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Validez les changements?')">Valider</button>
+                </div>
+                <div class="col-sm-4 d-grid">
+                    <a class="btn btn-outline-primary text-white" asp-controller="Utilisateur" asp-action="Index" role="button">Retour</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

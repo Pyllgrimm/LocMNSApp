@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      
+      - ACCEPT_EULA= Y
+    ports:
+      - 8082:1433
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+  locmnsapp:
+    image: ${DOCKER_REGISTRY-}locmnsapp
+    build:
+      context: .
+      dockerfile: LocMNSApp/Dockerfile
+    ports:
+      - 8081:80
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      
+
+  
+
+volumes:
+  sqlserverdata:

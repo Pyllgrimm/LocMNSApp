@@ -22,6 +22,56 @@ namespace LocMNSApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LocMNSApp.Models.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("ArchivateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateDebut")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateDemande")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateRetourPrevue")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateRetourReelle")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DemandeurId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("Duree")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterielDemandeId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("MontantTotal")
+                        .HasPrecision(16)
+                        .HasColumnType("decimal(16,0)");
+
+                    b.Property<int?>("StatusId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DemandeurId");
+
+                    b.HasIndex("MaterielDemandeId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Locations");
+                });
+
             modelBuilder.Entity("LocMNSApp.Models.Materiel", b =>
                 {
                     b.Property<int>("Id")
@@ -30,12 +80,18 @@ namespace LocMNSApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("ArchivateAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Categorie")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreation")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Disponibilitee")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Etat")
                         .IsRequired()
@@ -61,6 +117,23 @@ namespace LocMNSApp.Migrations
                     b.ToTable("Materiels");
                 });
 
+            modelBuilder.Entity("LocMNSApp.Models.StatusLocation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("StatusName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatueLocations");
+                });
+
             modelBuilder.Entity("LocMNSApp.Models.Utilisateur", b =>
                 {
                     b.Property<string>("Id")
@@ -71,6 +144,12 @@ namespace LocMNSApp.Migrations
 
                     b.Property<string>("Adresse")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ArchivateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CodePostal")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -120,6 +199,9 @@ namespace LocMNSApp.Migrations
                     b.Property<string>("Promotion")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -129,6 +211,9 @@ namespace LocMNSApp.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Ville")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -276,6 +361,29 @@ namespace LocMNSApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("LocMNSApp.Models.Location", b =>
+                {
+                    b.HasOne("LocMNSApp.Models.Utilisateur", "Demandeur")
+                        .WithMany("Locations")
+                        .HasForeignKey("DemandeurId");
+
+                    b.HasOne("LocMNSApp.Models.Materiel", "MaterielDemande")
+                        .WithMany()
+                        .HasForeignKey("MaterielDemandeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LocMNSApp.Models.StatusLocation", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
+
+                    b.Navigation("Demandeur");
+
+                    b.Navigation("MaterielDemande");
+
+                    b.Navigation("Status");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -325,6 +433,11 @@ namespace LocMNSApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LocMNSApp.Models.Utilisateur", b =>
+                {
+                    b.Navigation("Locations");
                 });
 #pragma warning restore 612, 618
         }

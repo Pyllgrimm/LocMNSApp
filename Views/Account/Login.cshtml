@@ -1,18 +1,16 @@
 ﻿@using LocMNSApp.ViewModels;
 @model LoginViewModel
 
-@{
-    ViewData["Title"] = "Login";
-}
 
-<div class="row d-flex align-items-center justify-content-center">
-    <div class="col-md-3 card p-3">
-        <h2 class="text-center text-info">Login</h2>
+
+<div class="row d-flex align-items-center justify-content-center mt-xxl-5 ">
+    <div class="col-md-3 card p-3 rounded background-Formulaire">
+        <h2 class="text-center text-white">Login</h2>
         <form asp-action="Login" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-1">
                 <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" />
+                <input asp-for="Username" class="form-control" autocomplete="on"/>
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
             <div class="mb-1">
@@ -27,7 +25,7 @@
             </div>
             <div class="row">
                 <div class="col-8">
-                    <a asp-action="MotDePasseOublie" class="text-decoration-none float-start mt-2">Mot de passe oublié</a>
+                    @* <a asp-action="ResetPassword" asp-controller="Account" class="text-decoration-none float-start mt-2">Mot de passe oublié</a> *@
                 </div>
                 <div class="col-4">
                     <input type="submit" value="Login" class="btn btn-primary btn-sm float-end" />

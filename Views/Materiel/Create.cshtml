@@ -3,11 +3,11 @@
 }
 
 <div class="row">
-    <div class="col-md-8 mx-auto rounded border p-3">
-        <h2 class="text-center mb-5">Nouveau Matériel</h2>
+    <div class="col-md-8 mx-auto bg-white rounded border p-3">
+        <h2 class="text-center mb-5 text-info">Nouveau Matériel</h2>
         <form method="post" enctype="multipart/form-data">
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Nom du Matériel</label>
+                <label class="col-sm-4 col-form-label ">Nom du Matériel</label>
                 <div class="col-sm-8">
                     <input class="form-control" asp-for="NomMateriel" />
                     <span asp-validation-for="NomMateriel" class="text-danger"></span>
@@ -57,12 +57,22 @@
                     </select>
                 </div>
             </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Disponibilitée</label>
+                <div class="col-sm-8">
+                    <select class="form-select" asp-for="Disponibilitee">
+                        <option value="Autre">Autre</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Indisponible">Indisponible</option>
+                    </select>
+                </div>
+            </div>
             <div class="row">
                 <div class="offset-sm-4 col-sm-4 d-grid">
                     <button type="submit" class="btn btn-primary">Valider</button>
                 </div>
                 <div class="col-sm-4 d-grid">
-                    <a class="btn btn-outline-primary" asp-controller="Materiel" asp-action="Index" role="button">Effacer</a>
+                    <a class="btn btn-outline-primary" asp-controller="Materiel" asp-action="Index" role="button">Retour</a>
                 </div>
             </div>
         </form>

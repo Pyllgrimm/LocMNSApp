@@ -20,7 +20,9 @@ namespace LocMNSApp.Models
         [Required]
         [Precision(16, 2)]
         public decimal PrixParJour { get; set; }
+        public string? Disponibilitee { get; set; } = "Disponible";
 
         public DateTime DateCreation { get; set; }
+        public DateTime? ArchivateAt { get; set; }
     }
 }

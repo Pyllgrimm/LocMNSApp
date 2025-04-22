@@ -1,0 +1,46 @@
+﻿@model List<Location>
+
+
+<h2 class="text-center mb-2 text-white mt-5">Mes locations</h2>
+
+<div class="row mb-3">
+    <div class="col">
+        @* <a class="btn btn-primary" asp-controller="Location" asp-action="Create">Nouvel location</a> *@
+    </div>
+    <div class="col">
+    </div>
+</div>
+
+
+<table class="table bg-white rounded">
+    <thead>
+        <tr class="text-center">
+            <th>Date Demande</th>
+            <th>Date Debut</th>
+            <th>Duree</th>
+            <th>Retour Prevue</th>
+            <th>Montant total</th>
+            <th>Status Demande</th>
+            <th>Materiel</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var location in Model)
+        {
+            <tr class="text-center ">
+                <td>@location.DateDemande</td>
+                <td>@location.DateDebut</td>
+                <td>@location.Duree</td>
+                <td>@location.DateRetourPrevue</td>
+                <td>@location.MontantTotal€</td>
+                <td>@location.Status.StatusName</td>
+                <td>@location.MaterielDemande.NomMateriel</td>
+                <td style="white-space:nowrap">
+                    <a class="btn btn-primary btn-sm" asp-controller="Location" asp-action="Edit" asp-route-id="@location.Id"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-danger btn-sm" asp-controller="Location" asp-action="Delete" asp-route-id="@location.Id" onclick="return confirm('Etes-vous sûr ?')"><i class="fa fa-archive"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

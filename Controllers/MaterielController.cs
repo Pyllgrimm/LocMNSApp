@@ -16,9 +16,10 @@ namespace LocMNSApp.Controllers
         {
             _context = context;
         }
+
         public IActionResult Index()
         {
-            var materiels = _context.Materiels.ToList();
+            var materiels = _context.Materiels.Where(m=>m.ArchivateAt==null).ToList();
             return View(materiels);
         }
 
@@ -27,8 +28,9 @@ namespace LocMNSApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Create(MaterielDto materielDto)
+        public async Task<IActionResult> Create(MaterielDto materielDto)
         {
             if (!ModelState.IsValid)
                 return View(materielDto);
@@ -46,11 +48,13 @@ namespace LocMNSApp.Controllers
             };
 
             _context.Materiels.Add(materiel);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            TempData["success"] = "Matériel modifié avec succès";
 
-            return RedirectToAction("Index", "Materiel");
+            return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var materiel = _context.Materiels.Find(id);
@@ -66,21 +70,25 @@ namespace LocMNSApp.Controllers
                 NumeroSerie = materiel.NumeroSerie,
                 Etat = materiel.Etat,
                 PrixParJour = materiel.PrixParJour,
+                Disponibilitee = materiel.Disponibilitee,
             };
 
             ViewData["MaterielId"] = materiel.Id;
             ViewData["DateCreation"] = materiel.DateCreation.ToString("dd/MM/yyyy");
 
+
             return View(materielDto);
+
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Edit(int id, MaterielDto materielDto)
         {
             var materiel = _context.Materiels.Find(id);
 
             if (materiel == null)
-                return RedirectToAction("Index", "Materiel");
+                return RedirectToAction("Index");
 
             if (!ModelState.IsValid)
             {
@@ -96,12 +104,15 @@ namespace LocMNSApp.Controllers
             materiel.PrixParJour = materielDto.PrixParJour;
             materiel.NumeroSerie = materielDto.NumeroSerie;
             materiel.Etat = materielDto.Etat;
+            materiel.Disponibilitee = materielDto.Disponibilitee;
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Materiel");
+            TempData["success"] = "Matériel modifié avec succès";
+            return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var materiel = _context.Materiels.Find(id);
@@ -109,8 +120,9 @@ namespace LocMNSApp.Controllers
             if (materiel == null)
                 return RedirectToAction("Index", "Materiel");
 
-            _context.Materiels.Remove(materiel);
+            materiel.ArchivateAt = DateTime.Now;
             _context.SaveChanges(true);
+            TempData["success"] = "Matériel archivé avec succès";
 
             return RedirectToAction("Index", "Materiel");
         }

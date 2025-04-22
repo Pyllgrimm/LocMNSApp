@@ -19,5 +19,16 @@ namespace LocMNSApp.ViewModels
         [Display(Name = "Comfirmez Password")]
         [DataType(DataType.Password)]
         public string? ComfirmPassword { get; set; }
+        [Required]
+        public string? Adresse { get; set; }
+        [Required]
+        public int CodePostal { get; set; }
+        [Required]
+        public string? Ville { get; set; }
+        [Required]
+        public string? Promotion { get; set; }
+        [Required]
+        public string? Telephone { get; set; }
+
     }
 }

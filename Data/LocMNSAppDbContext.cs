@@ -11,9 +11,15 @@ namespace LocMNSApp.Data
         {
             
         }
-        
-        
+
+
+
         public DbSet<Materiel> Materiels { get; set; }
         public DbSet<Utilisateur> Utilisateurs { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<StatusLocation> StatueLocations { get; set; }
+        
+        
+        
     }
 }

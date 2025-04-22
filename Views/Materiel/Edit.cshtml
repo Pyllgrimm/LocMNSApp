@@ -3,31 +3,31 @@
 }
 
 <div class="row">
-    <div class="col-md-8 mx-auto rounded border p-3">
-        <h2 class="text-center mb-5">Edit Matériel</h2>
+    <div class="col-md-8 mx-auto mt-5 mb-5 background-Formulaire rounded ps-5 pe-5">
+        <h2 class="text-center mb-5 mt-3 text-white background-Formulaire">Edit Matériel</h2>
         <form method="post" enctype="multipart/form-data">
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Id</label>
+                <label class="col-sm-4 col-form-label text-white">Id</label>
                 <div class="col-sm-8">
-                    <input class="form-control-plaintext" readonly value="@ViewData["MaterielId"]" />
+                    <input class="form-control-plaintext text-white" readonly value="@ViewData["MaterielId"]" />
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Nom du Matériel</label>
+                <label class="col-sm-4 col-form-label text-white">Nom du Matériel</label>
                 <div class="col-sm-8">
                     <input class="form-control" asp-for="NomMateriel" />
                     <span asp-validation-for="NomMateriel" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Marque</label>
+                <label class="col-sm-4 col-form-label text-white">Marque</label>
                 <div class="col-sm-8">
                     <input class="form-control" asp-for="Marque" />
                     <span asp-validation-for="Marque" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Categorie</label>
+                <label class="col-sm-4 col-form-label text-white">Categorie</label>
                 <div class="col-sm-8">
                     <select class="form-select" asp-for="Categorie">
                         <option value="Other">Other</option>
@@ -38,21 +38,21 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Numéro de série</label>
+                <label class="col-sm-4 col-form-label text-white">Numéro de série</label>
                 <div class="col-sm-8">
                     <input class="form-control" asp-for="NumeroSerie" />
                     <span asp-validation-for="NumeroSerie" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Prix/j</label>
+                <label class="col-sm-4 col-form-label text-white">Prix/j</label>
                 <div class="col-sm-8">
                     <input class="form-control" asp-for="PrixParJour" />
                     <span asp-validation-for="PrixParJour" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Etat</label>
+                <label class="col-sm-4 col-form-label text-white">Etat</label>
                 <div class="col-sm-8">
                     <select class="form-select" asp-for="Etat">
                         <option value="Autre">Autre</option>
@@ -64,17 +64,27 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Mise en service le</label>
+                <label class="col-sm-4 col-form-label text-white">Disponibilitée</label>
                 <div class="col-sm-8">
-                    <input class="form-control-plaintext" readonly value="@ViewData["DateCreation"]" />
+                    <select class="form-select" asp-for="Disponibilitee">
+                        <option value="Autre">Autre</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Indisponible">Indisponible</option>
+                    </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label text-white">Mise en service le</label>
+                <div class="col-sm-8">
+                    <input class="form-control-plaintext text-white" readonly value="@ViewData["DateCreation"]" />
+                </div>
+            </div>
+            <div class="row mb-3">
                 <div class="offset-sm-4 col-sm-4 d-grid">
-                    <button type="submit" class="btn btn-primary" onclick="return confirm('Validez les changements?')">Valider</button>
+                    <button type="submit" class="btn btn-primary">Valider</button>
                 </div>
                 <div class="col-sm-4 d-grid">
-                    <a class="btn btn-outline-primary" asp-controller="Materiel" asp-action="Index" role="button">Retour</a>
+                    <a class="btn btn-outline-primary text-white" asp-controller="Materiel" asp-action="Index" role="button">Retour</a>
                 </div>
             </div>
         </form>

@@ -2,8 +2,8 @@ using LocMNSApp.Data;
 using LocMNSApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System;
 
 namespace LocMNSApp
@@ -18,14 +18,18 @@ namespace LocMNSApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            {
+                option.LoginPath = "/Account/Login";
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+            });
+
             builder.Services.AddDbContext<LocMNSAppDbContext>(
                 options => options.UseSqlServer(connectionString));
-
 
             builder.Services.AddIdentity<Utilisateur, IdentityRole>(
                 options =>
                 {
-                    options.Password.RequiredUniqueChars = 0;
                     options.Password.RequireUppercase = false;
                     options.Password.RequiredLength = 8;
                     options.Password.RequireNonAlphanumeric = false;
@@ -49,27 +53,30 @@ namespace LocMNSApp
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
+            
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-                var roles = new[] { "Admin", "Formateur", "Stagiaire" };
+                var roles = new[] {"Admin", "Collaborateur", "Utilisateur" };
 
                 foreach (var role in roles)
                 {
                     if(!await roleManager.RoleExistsAsync(role))
+                    {
                         await roleManager.CreateAsync(new IdentityRole(role));
-
+                    }
+                    
                 }
-            }
 
-            
+            }
 
             app.Run();
         }
